@@ -5,7 +5,7 @@ contract PurePoll{
         //address of creator
         address creator; 
         //name of the poll
-        bytes32 text;
+        string text;
         //not required contract expiration UNIX timestamp
         //expires when eth runs out
         uint deadline;
@@ -23,7 +23,7 @@ contract PurePoll{
     //options to be voted
     struct Option{
         //name of option
-        bytes32 text;
+        uint value;
         //number of casted votes
         uint votes;
     }
@@ -33,10 +33,10 @@ contract PurePoll{
     Poll public p;
     
       // event tracking of all votes
-  event NewVote(bytes32 votechoice);
+  event NewVote(uint votechoice);
    
      //initiator function that stores the necessary poll information
-  function NewPoll(bytes32 _text, bytes32[] _options, address[] _voters, uint _deadline) {
+  function NewPoll(string _text, uint[] _options, address[] _voters, uint _deadline) {
     p.creator = msg.sender;
     p.text = _text;
     p.deadline = _deadline;
@@ -48,7 +48,7 @@ contract PurePoll{
         // Option({}) creates a temporary Option object
         // options.push(...) appends _option to contract options
             options.push(Option({
-            text: _options[i],
+            value: _options[i],
             votes: 0
             }));
     }
@@ -64,20 +64,20 @@ contract PurePoll{
     }
   }
     //function for user vote. input is a string choice
-  function vote(bytes32 _choice) returns (bool) {
+  function vote(uint _choice) returns (bool) {
     //now = alias for block.timestamp 
     if(now > p.deadline){
-        p.status = true;
+        p.status = false;
         return false;
     }
     
-    if (msg.sender != p.creator || p.status != true) {
-      return false;
-    }
+    //if (msg.sender != p.creator || p.status != true) {
+    //  return false;
+    //}
     
     uint voteWeight = 1; //default weight is 1
     
-    if(voters.length != 0){
+    if(voters.length > 0){
         //Poll requires authentication
         bool verified = false;
         for(uint i = 0; i < voters.length; i++){
@@ -103,7 +103,7 @@ contract PurePoll{
     
     for(uint x = 0; x < options.length; x++){
             //loopin through options
-            if(_choice == options[x].text){
+            if(_choice == options[x].value){
                 //vote casted
                 options[x].votes += voteWeight;
                 p.totalVotes += 1;
