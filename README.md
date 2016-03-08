@@ -1,4 +1,6 @@
-8.1	Ethereum Decentralized Voting Application “PureVote”
+**PureVote**
+
+- Voting Application build on Ethereum platform is part of theses
 
 Bachelor's theses project 
-Author: Marek Šíp
+Author: Marek Sip
